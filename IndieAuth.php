@@ -61,6 +61,7 @@ class mwSpecialIndieAuth extends SpecialPage
 
       if($domain) {
         $id = User::idFromName($username);
+        
         if (!$id) {
             $user = User::newFromName($username);
             $user->setRealName($domain);
@@ -147,7 +148,7 @@ class IndieAuthPlugin extends AuthPlugin {
 
       $redirect_uri = $titleObj->getFullURL(array_key_exists('returnto', $_GET) ? 'returnto='.$_GET['returnto'] : FALSE);
 
-      header('Location: http://indieauth.com/auth?me=' . strtolower($username) . '&redirect_uri=' . urlencode($redirect_uri));
+      header('Location: https://indieauth.com/auth?me=' . strtolower($username) . '&redirect_uri=' . urlencode($redirect_uri));
       die();
     }
 
@@ -323,7 +324,7 @@ class IndieAuthPlugin extends AuthPlugin {
   }
 
   function indieAuthDomainFromToken($token) {
-    $ch = curl_init('http://indieauth.com/session?token=' . $token);
+    $ch = curl_init('https://indieauth.com/session?token=' . $token);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     $response = curl_exec($ch);
     if(!$response) {
@@ -366,7 +367,8 @@ class IndieAuthLoginTemplate extends QuickTemplate {
   <h2><?php $this->msg('login') ?></h2>
   <p id="userloginlink"><?php $this->html('link') ?></p>
   <?php $this->html('header'); /* pre-table point for form plugins... */ ?>
-  <div id="userloginprompt"><?php  $this->msgWiki('loginprompt') ?></div>
+  <!-- <div id="userloginprompt"><?php  $this->msgWiki('loginprompt') ?></div> -->
+  <h4>Sign in with your domain</h4>
   <?php if( @$this->haveData( 'languages' ) ) { ?><div id="languagelinks"><p><?php $this->html( 'languages' ); ?></p></div><?php } ?>
   <table>
     <tr>
@@ -397,6 +399,15 @@ class IndieAuthLoginTemplate extends QuickTemplate {
       </td>
     </tr>
   </table>
+  <div id="userloginprompt" style="margin-top: 20px;">
+    This is an <a href="https://indieauth.com/">IndieAuth</a> login prompt. To use it, you'll need to:
+    <ul>
+      <li>Add a link on your home page to your various social profiles (Twitter, Github, etc) with the attribute rel="me"</li>
+      <li>Ensure your profiles link back to your home page.</li>
+    </ul>
+    Read the <a href="https://indieauth.com/setup">full setup instructions</a>.
+  </div>
+
   <input type="hidden" name="wpPassword" value="********" id="wpPassword1" />
 
 <?php if( @$this->haveData( 'uselang' ) ) { ?><input type="hidden" name="uselang" value="<?php $this->text( 'uselang' ); ?>" /><?php } ?>
