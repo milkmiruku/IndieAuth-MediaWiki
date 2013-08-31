@@ -34,7 +34,7 @@ $wgHooks['UserLoginForm'][] = 'IndieAuthPlugin::loginForm';
 $wgGroupPermissions['*']['createaccount'] = false;
 
 // The Auth_remoteuser class is an AuthPlugin so make sure we have this included.
-require_once('AuthPlugin.php');
+require_once('includes/AuthPlugin.php');
 
 // Set up the special page for handling the callback
 $wgSpecialPages['IndieAuth'] = 'mwSpecialIndieAuth';
